@@ -96,7 +96,7 @@ func cleanServer() {
 
     now := time.Now().UnixNano() / int64(time.Millisecond)
 
-	fmt.Println("[%s] Meeting count: %d\n", time.Now().Format("15:04:05"), len(meetingsResp.Meetings))
+	fmt.Printf("[%s] Meeting count: %d\n", time.Now().Format("15:04:05"), len(meetingsResp.Meetings))
 
     for _, m := range meetingsResp.Meetings {
         if m.StartTime == 0 {
