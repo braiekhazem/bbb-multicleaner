@@ -22,8 +22,10 @@ type MeetingsResponse struct {
     Meetings []Meeting `xml:"meetings>meeting"`
 }
 
-var MAX_DURATION =  4 * time.Hour
-var SLEEP_TIME = 10 * time.Minute
+var MAX_DURATION =  2 * time.Minute // 2 minutes
+var SLEEP_TIME = 1 * time.Minute // 1 minute
+// var MAX_DURATION =  4 * time.Hour // 4 hours
+// var SLEEP_TIME = 10 * time.Minute // 10 minutes
 
 func getBBBConfig() (string, string, error) {
     cmd := exec.Command("bbb-conf", "--secret")
