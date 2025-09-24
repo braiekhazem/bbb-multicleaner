@@ -22,8 +22,8 @@ type MeetingsResponse struct {
     Meetings []Meeting `xml:"meetings>meeting"`
 }
 
-var MAX_DURATION =  2 * time.Minute
-var SLEEP_TIME = 1 * time.Minute
+var MAX_DURATION =  4 * time.Hour
+var SLEEP_TIME = 10 * time.Minute
 
 func getBBBConfig() (string, string, error) {
     cmd := exec.Command("bbb-conf", "--secret")
@@ -51,7 +51,6 @@ func getBBBConfig() (string, string, error) {
     return bbbURL, secret, nil
 }
 
-// BBB API checksum
 func checksum(apiCall, query, secret string) string {
     h := sha1.New()
     h.Write([]byte(apiCall + query + secret))
@@ -95,13 +94,14 @@ func cleanServer() {
 
     now := time.Now().UnixNano() / int64(time.Millisecond)
 
+	fmt.Println("[%s] Meeting count: %d\n", time.Now().Format("15:04:05"), len(meetingsResp.Meetings))
+
     for _, m := range meetingsResp.Meetings {
         if m.StartTime == 0 {
             continue
         }
 
         duration := time.Duration(now-m.StartTime) * time.Millisecond
-		fmt.Println( "duration: " + duration.String() + " MAX_DURATION: " + MAX_DURATION.String())
         if duration >= MAX_DURATION {
             fmt.Printf("[%s] Ending meeting %s (%.2f hours)\n", time.Now().Format("15:04:05"), m.MeetingID, duration.Hours())
             params := url.Values{}
@@ -109,7 +109,7 @@ func cleanServer() {
             _, err := apiCall(bbbURL, secret, "end", params)
             if err != nil {
                 fmt.Printf("[%s] Error ending meeting %s: %v\n", time.Now().Format("15:04:05"), m.MeetingID, err)
-            }
+            } 
         }
     }
 }
@@ -117,11 +117,9 @@ func cleanServer() {
 func main() {
 	fmt.Println("Starting BBB Local Cleaner Service")
 	
-	// Run initial cleanup
 	fmt.Printf("[%s] Running initial cleanup...\n", time.Now().Format("15:04:05"))
 	cleanServer()
 	
-	// Set up ticker for periodic cleanup
 	ticker := time.NewTicker(SLEEP_TIME)
 	defer ticker.Stop()
 
@@ -131,3 +129,4 @@ func main() {
 		cleanServer()
 	}
 }
+
