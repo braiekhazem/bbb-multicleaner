@@ -1,0 +1,17 @@
+{
+  "name": "bbb-multicleaner",
+  "version": "1.0.0",
+  "description": "BigBlueButton meeting cleaner service",
+  "scripts": {
+    "prepare": "husky install",
+    "pre-commit": "make pre-commit"
+  },
+  "devDependencies": {
+    "husky": "^8.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "make pre-commit"
+    }
+  }
+}
