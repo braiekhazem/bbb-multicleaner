@@ -7,7 +7,6 @@ import (
 	"time"
 )
 
-
 func logEndedSession(meetingID string, duration time.Duration) {
 	logFile, err := os.OpenFile("logs/bbb-multicleaner-logs.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
